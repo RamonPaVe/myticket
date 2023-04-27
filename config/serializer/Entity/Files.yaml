@@ -1,0 +1,8 @@
+App\Entity\Files:
+  attributes:
+    id:
+      groups: ["files"]
+    file_name:
+      groups: ["files"]
+    image:
+      groups: ["files"]

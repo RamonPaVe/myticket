@@ -1,0 +1,20 @@
+App\Entity\Ticket:
+  attributes:
+    id:
+      groups: ["ticket"]
+    summary:
+      groups: ["ticket"]
+    description:
+      groups: ["ticket"]
+    creation_date:
+      groups: ["ticket"]
+    modification_date:
+      groups: ["ticket"]
+    resolution_date:
+      groups: ["ticket"]
+    close_date:
+      groups: ["ticket"]
+    external_ticket:
+      groups: ["ticket"]
+    resolution:
+      groups: ["ticket"]

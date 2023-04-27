@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-#[ApiResource]
 #[ORM\Entity(repositoryClass: StateRepository::class)]
 class State
 {

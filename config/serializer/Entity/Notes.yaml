@@ -1,0 +1,10 @@
+App\Entity\Notes:
+  attributes:
+    id:
+      groups: ["notes"]
+    note:
+      groups: ["notes"]
+    modification_date:
+      groups: ["notes"]
+    creation_date:
+      groups: ["notes"]

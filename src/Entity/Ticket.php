@@ -9,7 +9,6 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-#[ApiResource]
 #[ORM\Entity(repositoryClass: TicketRepository::class)]
 class Ticket
 {
@@ -41,6 +40,9 @@ class Ticket
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $resolution = null;
+
+
+    //TODO: Añadir ficheros adjuntos
 
     /**
      * @return int|null

@@ -9,7 +9,6 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 
-#[ApiResource]
 #[ORM\Entity(repositoryClass: NotesRepository::class)]
 class Notes
 {

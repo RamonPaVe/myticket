@@ -1,0 +1,6 @@
+App\Entity\TicketType:
+  attributes:
+    id:
+      groups: ["ticketType"]
+    typename:
+      groups: ["ticketType"]

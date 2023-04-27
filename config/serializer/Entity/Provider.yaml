@@ -1,0 +1,10 @@
+App\Entity\Provider:
+  attributes:
+    id:
+      groups: ["provider"]
+    provider_name:
+      groups: ["provider"]
+    provider_email:
+      groups: ["provider"]
+    provider_phone:
+      groups: ["provider"]
