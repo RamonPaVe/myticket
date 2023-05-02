@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,6 +37,14 @@ class User
 
     #[ORM\Column]
     private ?bool $active = null;
+
+    #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
+    private Collection $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 
     /**
      * @return int|null
@@ -117,7 +126,7 @@ class User
         return $this;
     }
 
-    public function isActive(): ?bool
+    public function getActive(): ?bool
     {
         return $this->active;
     }
@@ -125,6 +134,30 @@ class User
     public function setActive(bool $active): self
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Group>
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups->add($group);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        $this->groups->removeElement($group);
 
         return $this;
     }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
-
+#[ApiResource]
 #[ORM\Entity(repositoryClass: SubcategoryRepository::class)]
 class Subcategory
 {
@@ -18,6 +18,9 @@ class Subcategory
 
     #[ORM\Column(length: 100)]
     private ?string $subcategory_name = null;
+
+    #[ORM\ManyToOne(inversedBy: 'Subcategory')]
+    private ?Category $category = null;
 
     /**
      * @return int|null
@@ -35,6 +38,18 @@ class Subcategory
     public function setSubcategoryName(string $subcategory_name): self
     {
         $this->subcategory_name = $subcategory_name;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
