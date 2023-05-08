@@ -2,13 +2,27 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
 use App\Repository\SubcategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ApiResource]
+
 #[ORM\Entity(repositoryClass: SubcategoryRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(),
+        new Put(),
+        new Delete(),
+    ]
+)]
 class Subcategory
 {
     #[ORM\Id]
@@ -19,7 +33,7 @@ class Subcategory
     #[ORM\Column(length: 100)]
     private ?string $subcategory_name = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Subcategory')]
+    #[ORM\ManyToOne(inversedBy: 'subcategory')]
     private ?Category $category = null;
 
     /**

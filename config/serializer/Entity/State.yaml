@@ -1,6 +1,0 @@
-App\Entity\State:
-  attributes:
-    id:
-      groups: ["state"]
-    state_name:
-      groups: ["state"]

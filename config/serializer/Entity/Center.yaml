@@ -1,6 +1,0 @@
-App\Entity\Center:
-  attributes:
-    id:
-      groups: ["center"]
-    center_name:
-      groups: ["center"]

@@ -1,6 +1,0 @@
-App\Entity\Level:
-  attributes:
-    id:
-      groups: ["level"]
-    level_name:
-      groups: ["level"]

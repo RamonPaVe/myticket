@@ -1,6 +1,0 @@
-App\Entity\Priority:
-  attributes:
-    id:
-      groups: ["priority"]
-    priority_name:
-      groups: ["priority"]

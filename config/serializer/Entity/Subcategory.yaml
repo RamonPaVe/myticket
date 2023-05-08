@@ -1,6 +1,0 @@
-App\Entity\Subcategory:
-  attributes:
-    id:
-      groups: ["subcategory"]
-    subcategory_name:
-      groups: ["subcategory"]
