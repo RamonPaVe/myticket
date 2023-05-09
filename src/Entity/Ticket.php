@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TicketRepository;
 
 use Carbon\Carbon;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
@@ -62,12 +63,54 @@ class Ticket
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $resolution = null;
 
+    #[ORM\OneToMany(mappedBy: 'id_ticket', targetEntity: Notes::class)]
+    private Collection $notes;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $affected_user = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $id_category = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?Subcategory $id_subcategory = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TicketType $id_ticketType = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?Group $assigned_group = null;
+
+    #[ORM\ManyToOne(inversedBy: 'created_tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $creator_user_id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'assigned_tickets')]
+    private ?User $assigned_user_id = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?Center $id_center = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Priority $id_priority = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?Level $id_level = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    private ?Provider $id_provider = null;
+
 
     public function __construct(){
         $this->creation_date= new \DateTimeImmutable();
         $this->modification_date = null;
         $this->resolution_date = null;
         $this->close_date = null;
+        $this->notes = new ArrayCollection();
     }
 
     //TODO: Añadir ficheros adjuntos
@@ -180,6 +223,169 @@ class Ticket
     public function setResolution(?string $resolution): self
     {
         $this->resolution = $resolution;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notes>
+     */
+    #[ApiResource()]
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Notes $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->setIdTicket($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Notes $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            // set the owning side to null (unless already changed)
+            if ($note->getIdTicket() === $this) {
+                $note->setIdTicket(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAffectedUser(): ?User
+    {
+        return $this->affected_user;
+    }
+
+    public function setAffectedUser(?User $affected_user): self
+    {
+        $this->affected_user = $affected_user;
+
+        return $this;
+    }
+
+    public function getIdCategory(): ?Category
+    {
+        return $this->id_category;
+    }
+
+    public function setIdCategory(?Category $id_category): self
+    {
+        $this->id_category = $id_category;
+
+        return $this;
+    }
+
+    public function getIdSubcategory(): ?Subcategory
+    {
+        return $this->id_subcategory;
+    }
+
+    public function setIdSubcategory(?Subcategory $id_subcategory): self
+    {
+        $this->id_subcategory = $id_subcategory;
+
+        return $this;
+    }
+
+    public function getIdTicketType(): ?TicketType
+    {
+        return $this->id_ticketType;
+    }
+
+    public function setIdTicketType(?TicketType $id_ticketType): self
+    {
+        $this->id_ticketType = $id_ticketType;
+
+        return $this;
+    }
+
+    public function getAssignedGroup(): ?Group
+    {
+        return $this->assigned_group;
+    }
+
+    public function setAssignedGroup(?Group $assigned_group): self
+    {
+        $this->assigned_group = $assigned_group;
+
+        return $this;
+    }
+
+    public function getCreatorUserId(): ?User
+    {
+        return $this->creator_user_id;
+    }
+
+    public function setCreatorUserId(?User $creator_user_id): self
+    {
+        $this->creator_user_id = $creator_user_id;
+
+        return $this;
+    }
+
+    public function getAssignedUserId(): ?User
+    {
+        return $this->assigned_user_id;
+    }
+
+    public function setAssignedUserId(?User $assigned_user_id): self
+    {
+        $this->assigned_user_id = $assigned_user_id;
+
+        return $this;
+    }
+
+    public function getIdCenter(): ?Center
+    {
+        return $this->id_center;
+    }
+
+    public function setIdCenter(?Center $id_center): self
+    {
+        $this->id_center = $id_center;
+
+        return $this;
+    }
+
+    public function getIdPriority(): ?Priority
+    {
+        return $this->id_priority;
+    }
+
+    public function setIdPriority(?Priority $id_priority): self
+    {
+        $this->id_priority = $id_priority;
+
+        return $this;
+    }
+
+    public function getIdLevel(): ?Level
+    {
+        return $this->id_level;
+    }
+
+    public function setIdLevel(?Level $id_level): self
+    {
+        $this->id_level = $id_level;
+
+        return $this;
+    }
+
+    public function getIdProvider(): ?Provider
+    {
+        return $this->id_provider;
+    }
+
+    public function setIdProvider(?Provider $id_provider): self
+    {
+        $this->id_provider = $id_provider;
 
         return $this;
     }

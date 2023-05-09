@@ -55,9 +55,29 @@ class User
     #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
     private Collection $groups;
 
+    #[ORM\ManyToOne(inversedBy: 'users')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Center $id_center = null;
+
+    #[ORM\ManyToMany(targetEntity: Notes::class, mappedBy: 'id_user')]
+    private Collection $notes;
+
+    #[ORM\OneToMany(mappedBy: 'affected_user', targetEntity: Ticket::class)]
+    private Collection $tickets;
+
+    #[ORM\OneToMany(mappedBy: 'creator_user_id', targetEntity: Ticket::class)]
+    private Collection $created_tickets;
+
+    #[ORM\OneToMany(mappedBy: 'assigned_user_id', targetEntity: Ticket::class)]
+    private Collection $assigned_tickets;
+
     public function __construct()
     {
         $this->groups = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
+        $this->created_tickets = new ArrayCollection();
+        $this->assigned_tickets = new ArrayCollection();
     }
 
     /**
@@ -172,6 +192,135 @@ class User
     public function removeGroup(Group $group): self
     {
         $this->groups->removeElement($group);
+
+        return $this;
+    }
+
+    public function getIdCenter(): ?Center
+    {
+        return $this->id_center;
+    }
+
+    public function setIdCenter(?Center $id_center): self
+    {
+        $this->id_center = $id_center;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Notes>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Notes $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes->add($note);
+            $note->addIdUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Notes $note): self
+    {
+        if ($this->notes->removeElement($note)) {
+            $note->removeIdUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): self
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setAffectedUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getAffectedUser() === $this) {
+                $ticket->setAffectedUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getCreatedTickets(): Collection
+    {
+        return $this->created_tickets;
+    }
+
+    public function addCreatedTicket(Ticket $createdTicket): self
+    {
+        if (!$this->created_tickets->contains($createdTicket)) {
+            $this->created_tickets->add($createdTicket);
+            $createdTicket->setCreatorUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedTicket(Ticket $createdTicket): self
+    {
+        if ($this->created_tickets->removeElement($createdTicket)) {
+            // set the owning side to null (unless already changed)
+            if ($createdTicket->getCreatorUserId() === $this) {
+                $createdTicket->setCreatorUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getAssignedTickets(): Collection
+    {
+        return $this->assigned_tickets;
+    }
+
+    public function addAssignedTicket(Ticket $assignedTicket): self
+    {
+        if (!$this->assigned_tickets->contains($assignedTicket)) {
+            $this->assigned_tickets->add($assignedTicket);
+            $assignedTicket->setAssignedUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignedTicket(Ticket $assignedTicket): self
+    {
+        if ($this->assigned_tickets->removeElement($assignedTicket)) {
+            // set the owning side to null (unless already changed)
+            if ($assignedTicket->getAssignedUserId() === $this) {
+                $assignedTicket->setAssignedUserId(null);
+            }
+        }
 
         return $this;
     }

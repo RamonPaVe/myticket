@@ -37,10 +37,14 @@ class Group
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groups')]
     private Collection $users;
 
+    #[ORM\OneToMany(mappedBy: 'assigned_group', targetEntity: Ticket::class)]
+    private Collection $tickets;
+
     public function __construct($group_name=null)
     {
         $this->group_name=$group_name;
         $this->users = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     /**
@@ -85,6 +89,36 @@ class Group
     {
         if ($this->users->removeElement($user)) {
             $user->removeGroup($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): self
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setAssignedGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getAssignedGroup() === $this) {
+                $ticket->setAssignedGroup(null);
+            }
         }
 
         return $this;
