@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: CenterRepository::class)]
@@ -22,6 +23,9 @@ use ApiPlatform\Metadata\Put;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['center:read'],
     ]
 )]
 class Center
@@ -29,12 +33,15 @@ class Center
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['center:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['center:read'])]
     private ?string $center_name = null;
 
     #[ORM\OneToMany(mappedBy: 'id_center', targetEntity: User::class)]
+    #[Groups(['center:read'])]
     private Collection $users;
 
     #[ORM\OneToMany(mappedBy: 'id_center', targetEntity: Ticket::class)]

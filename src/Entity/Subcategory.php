@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: SubcategoryRepository::class)]
@@ -22,6 +23,9 @@ use Doctrine\Common\Collections\ArrayCollection;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['category:read']
     ]
 )]
 class Subcategory
@@ -29,12 +33,15 @@ class Subcategory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['category:read'])]
     private ?string $subcategory_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'subcategory')]
+    #[Groups(['category:read'])]
     private ?Category $category = null;
 
     #[ORM\OneToMany(mappedBy: 'id_subcategory', targetEntity: Ticket::class)]

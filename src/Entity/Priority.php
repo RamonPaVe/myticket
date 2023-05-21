@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: PriorityRepository::class)]
@@ -22,6 +23,9 @@ use ApiPlatform\Metadata\Put;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['level:read']
     ]
 )]
 class Priority
@@ -29,12 +33,15 @@ class Priority
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['level:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['level:read'])]
     private ?string $priority_name = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_priority')]
+    #[Groups(['level:read'])]
     private ?Level $level = null;
 
     #[ORM\OneToMany(mappedBy: 'id_priority', targetEntity: Ticket::class)]

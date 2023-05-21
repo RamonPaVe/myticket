@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -22,6 +23,9 @@ use ApiPlatform\Metadata\Put;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['category:read'],
     ]
 )]
 class Category
@@ -29,12 +33,15 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category:read'])]
     private ?int $id = null;
 
+    #[Groups(['category:read'])]
     #[ORM\Column(length: 100)]
     private ?string $category_name = null;
 
-    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Subcategory::class)]
+    #[Groups(['category:read'])]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Subcategory::class, cascade:["remove"])]
     private Collection $subcategory;
 
     #[ORM\OneToMany(mappedBy: 'id_category', targetEntity: Ticket::class)]

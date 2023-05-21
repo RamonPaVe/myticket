@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: LevelRepository::class)]
@@ -22,6 +23,9 @@ use ApiPlatform\Metadata\Put;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['level:read'],
     ]
 )]
 class Level
@@ -29,12 +33,15 @@ class Level
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['level:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
+    #[Groups(['level:read'])]
     private ?string $level_name = null;
 
-    #[ORM\OneToMany(mappedBy: 'level', targetEntity: Priority::class)]
+    #[ORM\OneToMany(mappedBy: 'level', targetEntity: Priority::class, cascade:["remove"])]
+    #[Groups(['level:read'])]
     private Collection $id_priority;
 
     #[ORM\OneToMany(mappedBy: 'id_level', targetEntity: Ticket::class)]

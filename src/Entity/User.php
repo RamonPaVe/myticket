@@ -12,6 +12,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -22,6 +23,9 @@ use ApiPlatform\Metadata\Put;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['group:read','center:read']
     ]
 )]
 class User
@@ -29,13 +33,17 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['group:read','center:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $user_name = null;
+    #[Groups(['group:read','center:read'])]
+    private ?string $username = null;
 
     #[ORM\Column(length: 100)]
+    #[Groups(['group:read','center:read'])]
     private ?string $surname = null;
+    
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $user_email = null;
@@ -90,12 +98,12 @@ class User
 
     public function getUserName(): ?string
     {
-        return $this->user_name;
+        return $this->username;
     }
 
-    public function setUserName(string $user_name): self
+    public function setUserName(string $username): self
     {
-        $this->user_name = $user_name;
+        $this->username = $username;
 
         return $this;
     }
