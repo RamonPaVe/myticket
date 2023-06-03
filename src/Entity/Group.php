@@ -22,10 +22,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Delete(),
-    ]
-    ,
+    ],
     normalizationContext: [
-        'groups' => ['group:read']
+        'groups' => ['group:read', 'ticket:read']
     ]
 )]
 #[ORM\Table(name: '`group`')]
@@ -34,11 +33,11 @@ class Group
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['group:read'])]
+    #[Groups(['group:read','ticket:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['group:read'])]
+    #[Groups(['group:read', 'ticket:read'])]
     private ?string $group_name = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'groups')]

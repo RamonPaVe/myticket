@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
     ],
     normalizationContext: [
-        'groups' => ['category:read'],
+        'groups' => ['category:read', 'ticket:read'],
     ]
 )]
 class Category
@@ -33,7 +33,7 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:read'])]
+    #[Groups(['category:read', 'ticket:read'])]
     private ?int $id = null;
 
     #[Groups(['category:read'])]

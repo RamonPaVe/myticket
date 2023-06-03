@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
     ],
     normalizationContext: [
-        'groups' => ['group:read','center:read']
+        'groups' => ['group:read','center:read', 'user:read', 'ticket:read']
     ]
 )]
 class User
@@ -33,31 +33,36 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['group:read','center:read'])]
+    #[Groups(['user:read','group:read','center:read', 'ticket:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['group:read','center:read'])]
+    #[Groups(['user:read','group:read','center:read', 'ticket:read'])]
     private ?string $username = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['group:read','center:read'])]
+    #[Groups(['user:read','group:read','center:read', 'ticket:read'])]
     private ?string $surname = null;
     
 
     #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $user_email = null;
 
     #[ORM\Column(length: 25)]
+    #[Groups(['user:read'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 25, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $user_phone = null;
 
     #[ORM\Column(length: 9)]
+    #[Groups(['user:read'])]
     private ?string $dni = null;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?bool $active = null;
 
     #[ORM\ManyToMany(targetEntity: Group::class, inversedBy: 'users')]
@@ -65,6 +70,7 @@ class User
 
     #[ORM\ManyToOne(inversedBy: 'users')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['user:read'])]
     private ?Center $id_center = null;
 
     #[ORM\ManyToMany(targetEntity: Notes::class, mappedBy: 'id_user')]

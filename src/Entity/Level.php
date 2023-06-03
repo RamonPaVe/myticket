@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
     ],
     normalizationContext: [
-        'groups' => ['level:read'],
+        'groups' => ['level:read', 'ticket:read'],
     ]
 )]
 class Level
@@ -33,11 +33,11 @@ class Level
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['level:read'])]
+    #[Groups(['level:read', 'ticket:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 10)]
-    #[Groups(['level:read'])]
+    #[Groups(['level:read', 'ticket:read'])]
     private ?string $level_name = null;
 
     #[ORM\OneToMany(mappedBy: 'level', targetEntity: Priority::class, cascade:["remove"])]

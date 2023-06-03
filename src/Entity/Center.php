@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Delete(),
     ],
     normalizationContext: [
-        'groups' => ['center:read'],
+        'groups' => ['center:read', 'ticket:read'],
     ]
 )]
 class Center
@@ -33,11 +33,11 @@ class Center
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['center:read'])]
+    #[Groups(['center:read', 'ticket:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    #[Groups(['center:read'])]
+    #[Groups(['center:read', 'ticket:read'])]
     private ?string $center_name = null;
 
     #[ORM\OneToMany(mappedBy: 'id_center', targetEntity: User::class)]

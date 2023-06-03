@@ -26,6 +26,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(),
         new Put(),
         new Delete()
+    ],
+    normalizationContext: [
+        'groups' => ['ticket:read','ticket:write'], 'enable_max_depth'=>true
     ]
 )]
 class Ticket
@@ -33,76 +36,108 @@ class Ticket
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?int $id = null;
 
     
     #[ORM\Column(length: 255)]
-    #[Groups(['read'])]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?string $summary = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(['read'])]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['read'])]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?\DateTimeInterface $creation_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?\DateTimeInterface $modification_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?\DateTimeInterface $resolution_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?\DateTimeInterface $close_date = null;
 
     #[ORM\Column(length: 15, nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?string $external_ticket = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+      #[Groups(['ticket:read','ticket:write'])]
     private ?string $resolution = null;
 
     #[ORM\OneToMany(mappedBy: 'id_ticket', targetEntity: Notes::class)]
+    #[Groups(['ticket:read','ticket:write'])]
     private Collection $notes;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?User $affected_user = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[Groups(['ticket:read','ticket:write'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $id_category = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?Subcategory $id_subcategory = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?TicketType $id_ticketType = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?Group $assigned_group = null;
 
     #[ORM\ManyToOne(inversedBy: 'created_tickets')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?User $creator_user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'assigned_tickets')]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?User $assigned_user_id = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?Center $id_center = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?Priority $id_priority = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?Level $id_level = null;
 
     #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[Groups(['ticket:read','ticket:write'])]
     private ?Provider $id_provider = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
+    private ?string $affected_user_phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['ticket:read','ticket:write'])]
+    private ?string $affected_user_email = null;
+
+    #[ORM\ManyToOne(inversedBy: 'tickets')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:read','ticket:write'])]
+    private ?State $id_state = null;
 
 
     public function __construct(){
@@ -152,56 +187,56 @@ class Ticket
         return $this->creation_date;
     }
 
-    #[Groups(['read'])]
+    #[Groups(['ticket:read'])]
     public function getCreationDateAgo(): string
     {
         return Carbon::instance($this->creation_date)->diffForHumans();
     }
 
-/*     public function setCreationDate(\DateTimeInterface $creation_date): self
+    public function setCreationDate(\DateTimeInterface $creation_date): self
     {
         $this->creation_date = $creation_date;
 
         return $this;
-    } */
+    } 
 
+    #[Groups(['ticket:read'])]
     public function getModificationDate(): ?\DateTimeInterface
     {
         return $this->modification_date;
     }
 
-    
-
-/*     public function setModificationDate(?\DateTimeInterface $modification_date): self
+    public function setModificationDate(?\DateTimeInterface $modification_date): self
     {
         $this->modification_date = $modification_date;
 
         return $this;
-    } */
+    }
 
+    #[Groups(['ticket:read'])]
     public function getResolutionDate(): ?\DateTimeInterface
     {
         return $this->resolution_date;
     }
 
-/*     public function setResolutionDate(?\DateTimeInterface $resolution_date): self
+    public function setResolutionDate(?\DateTimeInterface $resolution_date): self
     {
         $this->resolution_date = $resolution_date;
 
         return $this;
-    } */
+    }
 
     public function getCloseDate(): ?\DateTimeInterface
     {
         return $this->close_date;
     }
 
-/*     public function setCloseDate(?\DateTimeInterface $close_date): self
+    public function setCloseDate(?\DateTimeInterface $close_date): self
     {
         $this->close_date = $close_date;
 
         return $this;
-    } */
+    }
 
     public function getExternalTicket(): ?string
     {
@@ -386,6 +421,42 @@ class Ticket
     public function setIdProvider(?Provider $id_provider): self
     {
         $this->id_provider = $id_provider;
+
+        return $this;
+    }
+
+    public function getAffectedUserPhone(): ?string
+    {
+        return $this->affected_user_phone;
+    }
+
+    public function setAffectedUserPhone(?string $affected_user_phone): self
+    {
+        $this->affected_user_phone = $affected_user_phone;
+
+        return $this;
+    }
+
+    public function getAffectedUserEmail(): ?string
+    {
+        return $this->affected_user_email;
+    }
+
+    public function setAffectedUserEmail(?string $affected_user_email): self
+    {
+        $this->affected_user_email = $affected_user_email;
+
+        return $this;
+    }
+
+    public function getIdState(): ?State
+    {
+        return $this->id_state;
+    }
+
+    public function setIdState(?State $id_state): self
+    {
+        $this->id_state = $id_state;
 
         return $this;
     }
