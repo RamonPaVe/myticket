@@ -73,7 +73,7 @@ class User
     #[Groups(['user:read'])]
     private ?Center $id_center = null;
 
-    #[ORM\ManyToMany(targetEntity: Notes::class, mappedBy: 'id_user')]
+    #[ORM\OneToMany(mappedBy: 'id_user', targetEntity: Notes::class)]
     private Collection $notes;
 
     #[ORM\OneToMany(mappedBy: 'affected_user', targetEntity: Ticket::class)]
@@ -234,7 +234,6 @@ class User
     {
         if (!$this->notes->contains($note)) {
             $this->notes->add($note);
-            $note->addIdUser($this);
         }
 
         return $this;
@@ -243,7 +242,9 @@ class User
     public function removeNote(Notes $note): self
     {
         if ($this->notes->removeElement($note)) {
-            $note->removeIdUser($this);
+            if ($note->getIdUser() === $this) {
+                $note->setIdUser(null);
+            }
         }
 
         return $this;

@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 #[ORM\Entity(repositoryClass: NotesRepository::class)]
@@ -23,6 +24,9 @@ use ApiPlatform\Metadata\Put;
         new Post(),
         new Put(),
         new Delete(),
+    ],
+    normalizationContext: [
+        'groups' => ['ticket:read']
     ]
 )]
 class Notes
@@ -30,26 +34,34 @@ class Notes
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['ticket:read'])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['ticket:read'])]
     private ?string $note = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['ticket:read'])]
     private ?\DateTimeInterface $modificacion_date = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['ticket:read'])]
     private ?\DateTimeInterface $creation_date = null;
-
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'notes')]
-    private Collection $id_user;
+    
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['ticket:read'])]
+    private ?User $id_user;
+
+    #[ORM\ManyToOne(inversedBy: 'notes')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Ticket $id_ticket = null;
 
     public function __construct()
     {
-        $this->id_user = new ArrayCollection();
+        //$this->id_user = new ArrayCollection();
     }
 
     /**
@@ -96,26 +108,15 @@ class Notes
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getIdUser(): Collection
+
+    public function getIdUser(): ?User
     {
         return $this->id_user;
     }
 
-    public function addIdUser(User $idUser): self
+    public function setIdUser(?User $id_user): self
     {
-        if (!$this->id_user->contains($idUser)) {
-            $this->id_user->add($idUser);
-        }
-
-        return $this;
-    }
-
-    public function removeIdUser(User $idUser): self
-    {
-        $this->id_user->removeElement($idUser);
+        $this->id_user = $id_user;
 
         return $this;
     }
