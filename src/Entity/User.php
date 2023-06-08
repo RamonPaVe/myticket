@@ -28,7 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'groups' => ['group:read','center:read', 'user:read', 'ticket:read']
     ]
 )]
-class User
+class User 
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -94,6 +94,11 @@ class User
         $this->assigned_tickets = new ArrayCollection();
     }
 
+
+    // #[ORM\Column(type: 'json')]
+    // private array $roles = [];
+
+    
     /**
      * @return int|null
      */
@@ -339,4 +344,45 @@ class User
 
         return $this;
     }
-}
+
+
+
+     /**
+     * The public representation of the user (e.g. a username, an email address, etc.)
+     *
+     * @see UserInterface
+     */
+    // public function getUserIdentifier(): string
+    // {
+    //     return (string) $this->user_email;
+    // }
+
+    /**
+     * @see UserInterface
+      */
+    // public function getRoles(): array
+    // {
+    //     $roles = $this->roles;
+    //     // guarantee every user at least has ROLE_USER
+    //     $roles[] = 'ROLE_USER';
+
+    //     return array_unique($roles);
+    // }
+
+    // public function setRoles(array $roles): self
+    // {
+    //     $this->roles = $roles;
+
+    //     return $this;
+    // }
+    // /**
+    //  * @see UserInterface
+    //  */
+    // public function eraseCredentials(): void
+    // {
+    //     // If you store any temporary, sensitive data on the user, clear it here
+    //     // $this->plainPassword = null;
+    // }
+
+
+    }

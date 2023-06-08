@@ -2,3 +2,6 @@ api:
   resource: .
   type: api_platform
   prefix: /api
+login:
+  path: /login
+  controller: App\Controller\LoginController::login

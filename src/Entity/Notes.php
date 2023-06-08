@@ -56,7 +56,7 @@ class Notes
     private ?User $id_user;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete:"cascade")]
     private ?Ticket $id_ticket = null;
 
     public function __construct()
